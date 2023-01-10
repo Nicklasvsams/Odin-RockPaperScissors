@@ -1,7 +1,30 @@
 var playerWins = 0;
 var computerWins = 0;
 
-console.log(game());
+var rockElement, paperElement, scissorsElement;
+
+
+document.addEventListener('DOMContentLoaded', () => {
+    rockElement = document.getElementById('rock');
+    paperElement = document.getElementById('paper');
+    scissorsElement = document.getElementById('scissors'); 
+
+    pwinElement = document.getElementById('pwins');
+    cpuwinElement = document.getElementById('cpuwins');
+    winnerElement = document.getElementById('winner');
+
+    rockElement.addEventListener("click", function () {
+        playRound('rock');
+    });
+
+    paperElement.addEventListener("click", function () {
+        playRound('paper');
+    });
+
+    scissorsElement.addEventListener("click", function () {
+        playRound('scissors');
+    });
+});
 
 function getComputerChoice() {
     const min = Math.ceil(1);
@@ -14,69 +37,73 @@ function getComputerChoice() {
     if (choice === 3) return "scissors";
 }
 
-function playRound() {
+function playRound(playerSelection) {
+    console.log(playerSelection);
+
+    winnerElement.textContent = "";
+    
     const rock = "rock";
     const paper = "paper";
     const scissors = "scissors";
 
-    do {
-        playerSelection = prompt("Rock, paper or scissors?").toLowerCase();
-        console.log(playerSelection);
-    } while (playerSelection != rock && playerSelection != paper && playerSelection != scissors)
+    var winner;
     
     computerSelection = getComputerChoice();
 
     if (playerSelection === computerSelection) {
-        console.log("Tie - Go again!")
-        return playRound();
+        winnerElement.textContent = "Tie - Try again!";
+        return;
     }
 
     if (playerSelection === rock) {
         if (computerSelection === paper) {
-            return cpuWin();
+            winner = 0;
         }
         if (computerSelection === scissors) {
-            return pWin();
+            winner = 1;
         }
     }
 
     if (playerSelection === paper) {
         if (computerSelection === scissors) {
-            return cpuWin();
+            winner = 0;
         }
         if (computerSelection === rock) {
-            return pWin();
+            winner = 1;
         }
     }
 
     if (playerSelection === scissors) {
         if (computerSelection === rock) {
-            return cpuWin();
+            winner = 0;
         }
         if (computerSelection === paper) {
-            return pWin();
+            winner = 1;
         }
     }
-}
 
-function game() {
-    var result = "";
+    winner == 0 ? cpuWin() : pWin();
 
-    for (let index = 0; index < 5; index++) {
-        console.log(playRound());
+    if (computerWins === 5 || playerWins === 5) {
+        var winnerName = "";
+
+        computerWins === 5 ? winnerName = "Computer" : winnerName = "Player";
+
+        winnerElement.textContent = winnerName + " wins!";
+
+        cpuwinElement.textContent = "";
+        pwinElement.textContent = "";
+        computerWins = 0;
+        playerWins = 0;
     }
-
-    if (playerWins > computerWins) return "Player wins " + playerWins + " to " + computerWins;
-    else if (computerWins > playerWins) return "Computer wins " + computerWins + " to " + playerWins;
-    else return "The game is a tie!";
 }
 
 function cpuWin() {
     computerWins += 1;
-    return "Computer wins!";
+    cpuwinElement.textContent = "CPU: " + computerWins;
 }
 
 function pWin() {
     playerWins += 1;
-    return "Player wins!";
+    pwinElement.textContent = "Player: " + playerWins;
 }
